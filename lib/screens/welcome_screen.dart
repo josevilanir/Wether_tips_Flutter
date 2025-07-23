@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'weather_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+  const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -27,9 +27,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       );
     } else {
-      // Mostra um aviso se o campo estiver vazio (opcional)
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor, digite seu nome')),
+        const SnackBar(content: Text('Por favor, digite seu nome')),
       );
     }
   }
@@ -37,27 +36,50 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Bem-vindo')),
+      backgroundColor: const Color(0xFFEAF6FF),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Digite seu nome:', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 16),
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Nome',
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Conteúdo original da tela
+              const Text(
+                'Bem-vindo ao Weather Tips!',
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Color(0xFF003366),
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _navigateToWeatherScreen,
-              child: Text('Continuar'),
-            ),
-          ],
+              const SizedBox(height: 24),
+              const Text(
+                'Veja a previsão do tempo da sua cidade\n'
+                'e receba dicas de saúde personalizadas.',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              // Novo campo para digitar o nome
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Digite seu nome',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _navigateToWeatherScreen,
+                child: const Text('Continuar'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 48),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
