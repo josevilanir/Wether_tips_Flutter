@@ -1,55 +1,63 @@
 import 'package:flutter/material.dart';
 import 'weather_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  void _navigateToWeatherScreen() {
+    final name = _nameController.text.trim();
+    if (name.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WeatherScreen(userName: name),
+        ),
+      );
+    } else {
+      // Mostra um aviso se o campo estiver vazio (opcional)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Por favor, digite seu nome')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF6FF),
+      appBar: AppBar(title: Text('Bem-vindo')),
       body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.wb_sunny, size: 80, key: Key('iconeLogo')),
-              const SizedBox(height: 24),
-              const Text('WeatherWise',
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF003366)),
-                  key: Key('tituloApp')),
-              const SizedBox(height: 32),
-              const Text('Seja bem-vindo!',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'Permita acesso à sua localização para ver previsões do tempo',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                  key: Key('descricaoPermissao'),
-                ),
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Digite seu nome:', style: TextStyle(fontSize: 20)),
+            SizedBox(height: 16),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Nome',
               ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                key: const Key('botaoUsarLocalizacao'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const WeatherScreen()),
-                  );
-                },
-                child: const Text("Usar minha localização atual"),
-              ),
-              const SizedBox(height: 32),
-              const Icon(Icons.map, size: 150, key: Key('imagemMapa')),
-            ],
-          ),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _navigateToWeatherScreen,
+              child: Text('Continuar'),
+            ),
+          ],
         ),
       ),
     );
