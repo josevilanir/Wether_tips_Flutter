@@ -3,7 +3,7 @@ import 'tip_screen.dart';
 
 class WeatherScreen extends StatelessWidget {
   final String userName;
-  const WeatherScreen({Key? key, required this.userName}) : super(key: key);
+  const WeatherScreen({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class WeatherScreen extends StatelessWidget {
             const Divider(),
             const SizedBox(height: 16),
             const Text("Próximos dias", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ...forecast.map((item) => ListTile(title: Text(item))).toList(),
+            ...forecast.map((item) => ListTile(title: Text(item))),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
