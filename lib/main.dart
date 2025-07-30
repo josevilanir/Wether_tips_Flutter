@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_weather_app/screens/welcome_screen.dart';
-import 'package:flutter_weather_app/viewmodels/tip_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'screens/welcome_screen.dart';
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => TipViewModel()),
-      ],
-      child: const WeatherApp(),
-    ),
-  );
+  runApp(const MyApp());
 }
 
-class WeatherApp extends StatelessWidget {
-  const WeatherApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Weather Tips',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: const Color(0xFFE5F6FF),
       ),
       home: const WelcomeScreen(),
     );

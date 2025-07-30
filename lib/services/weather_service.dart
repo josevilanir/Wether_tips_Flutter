@@ -1,24 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  static const _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+  static const String _apiKey = 'd211faebc5c7af2e4a92db88f4389ccc';
 
-  Future<Map<String, dynamic>> fetchWeather(double lat, double lon) async {
-    final apiKey = Platform.environment['OPENWEATHER_API_KEY'];
-    if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('OPENWEATHER_API_KEY not found in environment');
-    }
+  static const String _baseUrl = 'https://api.openweathermap.org/data/2.5';
 
-    final url = Uri.parse('$_baseUrl?lat=$lat&lon=$lon&appid=$apiKey&units=metric&lang=pt_br');
+  static Future<Map<String, dynamic>> fetchWeather(String cityName) async {
+    final url = Uri.parse(
+      '$_baseUrl/weather?q=$cityName&appid=$_apiKey&units=metric&lang=pt',
+    );
+
     final response = await http.get(url);
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to fetch weather: ${response.statusCode}');
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Falha ao buscar dados do clima');
     }
-
-    return json.decode(response.body) as Map<String, dynamic>;
   }
 }

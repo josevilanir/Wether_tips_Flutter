@@ -1,47 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../viewmodels/tip_viewmodel.dart';
 
 class TipScreen extends StatelessWidget {
-  const TipScreen({super.key});
+  final Map<String, dynamic> weatherData;
+
+  const TipScreen({super.key, required this.weatherData});
 
   @override
   Widget build(BuildContext context) {
-    final tipViewModel = Provider.of<TipViewModel>(context);
+    final tip = TipViewModel.getTip(weatherData);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF6FF),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("💡 Dica do Dia",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  key: Key('tituloDica')),
-              const SizedBox(height: 16),
-              Text(
-                tipViewModel.dicaAtual,
-                key: const Key('textoDicaAtual'),
-                style: const TextStyle(fontSize: 20, color: Color(0xFF003366)),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                key: const Key('botaoNovaDica'),
-                onPressed: () {
-                  tipViewModel.gerarNovaDica();
-                },
-                child: const Text("🔄 Ver outra dica"),
-              ),
-              const SizedBox(height: 16),
-              OutlinedButton(
-                key: const Key('botaoVoltar'),
-                onPressed: () => Navigator.pop(context),
-                child: const Text("⬅️ Voltar"),
-              ),
-            ],
+      backgroundColor: const Color(0xFFE5F6FF),
+      appBar: AppBar(
+        backgroundColor: Colors.deepPurple[300],
+        title: const Text('Dica do Dia'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.tips_and_updates,
+                  size: 48,
+                  color: Colors.deepPurple,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  tip,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

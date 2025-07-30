@@ -1,24 +1,18 @@
-import 'package:flutter/material.dart';
+class TipViewModel {
+  static String getTip(Map<String, dynamic> weatherData) {
+    final condition = weatherData['weather'][0]['main'];
 
-class TipViewModel extends ChangeNotifier {
-  final List<String> _dicas = [
-    "Leve um guarda-chuva! Pode chover mais tarde.",
-    "Hoje está ótimo para um passeio ao ar livre.",
-    "Não se esqueça do protetor solar!",
-    "Clima ideal para tomar um café quentinho!",
-    "Use roupas leves, o calor vai apertar!"
-  ];
-
-  String _dicaAtual = "Carregando dica...";
-
-  String get dicaAtual => _dicaAtual;
-
-  TipViewModel() {
-    gerarNovaDica();
-  }
-
-  void gerarNovaDica() {
-    _dicaAtual = (_dicas..shuffle()).first;
-    notifyListeners();
+    switch (condition) {
+      case 'Clear':
+        return 'Está ensolarado! Não esqueça o protetor solar.';
+      case 'Rain':
+        return 'Vai chover! Leve um guarda-chuva.';
+      case 'Clouds':
+        return 'Dia nublado, uma jaqueta pode ser útil.';
+      case 'Snow':
+        return 'Está nevando! Mantenha-se aquecido.';
+      default:
+        return 'Prepare-se para o clima!';
+    }
   }
 }
