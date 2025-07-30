@@ -6,6 +6,11 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
+## Configuração
+
+Para acessar a API do OpenWeatherMap defina a variável de ambiente
+`OPENWEATHER_API_KEY` com sua chave de API antes de executar o aplicativo.
+
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
