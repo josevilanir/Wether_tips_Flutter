@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'weather_screen.dart';
+import 'history_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -9,15 +10,17 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _ufController = TextEditingController();
   String? _error;
 
   void _navigateToWeatherScreen() {
-    final city = _controller.text.trim();
+    final city = _cityController.text.trim();
+    final uf = _ufController.text.trim().toUpperCase();
 
-    if (city.isEmpty) {
+    if (city.isEmpty || uf.isEmpty || uf.length != 2) {
       setState(() {
-        _error = 'Digite o nome de uma cidade';
+        _error = 'Informe cidade e UF válidas (ex: Natal, RN)';
       });
       return;
     }
@@ -29,7 +32,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => WeatherScreen(cityName: city),
+        builder: (_) => WeatherScreen(cityName: city, stateUf: uf),
+      ),
+    );
+  }
+
+  void _navigateToHistoryScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const HistoryScreen(),
       ),
     );
   }
@@ -44,23 +56,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.wb_sunny_rounded,
-                size: 72,
-                color: Colors.orange,
-              ),
+              const Icon(Icons.wb_sunny_rounded,
+                  size: 72, color: Colors.orange),
               const SizedBox(height: 24),
               const Text(
                 'Bem-vindo ao Weather Tips ☀️',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
               TextField(
-                controller: _controller,
+                controller: _cityController,
                 decoration: InputDecoration(
                   hintText: 'Digite o nome da cidade',
                   filled: true,
@@ -72,10 +78,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
-                textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.next,
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _ufController,
+                decoration: InputDecoration(
+                  hintText: 'Digite a UF (ex: RN)',
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(Icons.map),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                textCapitalization: TextCapitalization.characters,
+                maxLength: 2,
                 onSubmitted: (_) => _navigateToWeatherScreen(),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: _navigateToWeatherScreen,
                 style: ElevatedButton.styleFrom(
@@ -88,10 +110,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                 ),
                 icon: const Icon(Icons.search),
-                label: const Text(
-                  'Buscar clima',
-                  style: TextStyle(fontSize: 16),
-                ),
+                label:
+                    const Text('Buscar clima', style: TextStyle(fontSize: 16)),
+              ),
+              const SizedBox(height: 12),
+              TextButton.icon(
+                onPressed: _navigateToHistoryScreen,
+                icon: const Icon(Icons.history),
+                label: const Text('Ver histórico de buscas'),
               ),
             ],
           ),

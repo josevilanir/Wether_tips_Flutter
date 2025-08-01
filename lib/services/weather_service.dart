@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 
 class WeatherService {
   static const String _apiKey = 'd211faebc5c7af2e4a92db88f4389ccc';
-
   static const String _baseUrl = 'https://api.openweathermap.org/data/2.5';
 
-  static Future<Map<String, dynamic>> fetchWeather(String cityName) async {
+  static Future<Map<String, dynamic>> fetchWeather(
+      String cityName, String stateUf) async {
     final url = Uri.parse(
-      '$_baseUrl/weather?q=$cityName&appid=$_apiKey&units=metric&lang=pt',
+      '$_baseUrl/weather?q=$cityName,$stateUf,BR&appid=$_apiKey&units=metric&lang=pt',
     );
 
     final response = await http.get(url);
