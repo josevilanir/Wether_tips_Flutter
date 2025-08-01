@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import '../services/weather_service.dart';
 import 'tip_screen.dart';
+import '../repositories/busca_repository.dart';
 
 class WeatherScreen extends StatefulWidget {
   final String cityName;
+  final String stateUf; //
 
-  const WeatherScreen({super.key, required this.cityName});
+  const WeatherScreen({
+    super.key,
+    required this.cityName,
+    required this.stateUf,
+  });
 
   @override
   State<WeatherScreen> createState() => _WeatherScreenState();
@@ -17,7 +23,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   void initState() {
     super.initState();
-    _weatherFuture = WeatherService.fetchWeather(widget.cityName);
+
+    // Salva a cidade no histórico (sem o estado, como já era feito)
+    BuscaRepository.salvarBusca(widget.cityName, widget.stateUf);
+
+    _weatherFuture =
+        WeatherService.fetchWeather(widget.cityName, widget.stateUf);
   }
 
   @override
@@ -26,7 +37,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       backgroundColor: const Color(0xFFE5F6FF),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[300],
-        title: Text('Clima em ${widget.cityName}'),
+        title: Text('Clima em ${widget.cityName} - ${widget.stateUf}'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _weatherFuture,

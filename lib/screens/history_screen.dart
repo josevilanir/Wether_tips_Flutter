@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'weather_screen.dart';
 import '../repositories/busca_repository.dart';
+import 'weather_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -18,11 +18,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
     _buscasFuture = BuscaRepository.listarBuscas();
   }
 
-  void _abrirClima(String cidade) {
+  void _abrirClima(String cidade, String estado) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => WeatherScreen(cityName: cidade),
+        builder: (_) => WeatherScreen(cityName: cidade, stateUf: estado),
       ),
     );
   }
@@ -32,8 +32,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFE5F6FF),
       appBar: AppBar(
-        title: const Text('Histórico de Buscas'),
         backgroundColor: Colors.deepPurple[300],
+        title: const Text('Histórico de Buscas'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _buscasFuture,
@@ -44,32 +44,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
-              child: Text(
-                'Nenhuma cidade buscada ainda.',
-                style: TextStyle(fontSize: 16),
-              ),
+              child: Text('Nenhuma cidade buscada ainda.'),
             );
           }
 
-          final buscas = snapshot.data!;
+          final dados = snapshot.data!;
 
           return ListView.separated(
-            itemCount: buscas.length,
-            separatorBuilder: (_, __) => const Divider(),
+            itemCount: dados.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, index) {
-              final item = buscas[index];
-              final cidade = item['cidade'] ?? 'Desconhecida';
-              final data = DateTime.tryParse(item['data'] ?? '') ??
-                  DateTime.fromMillisecondsSinceEpoch(0);
-
+              final cidade = dados[index]['cidade'];
+              final estado = dados[index]['estado'] ?? '';
               return ListTile(
-                leading:
-                    const Icon(Icons.location_city, color: Colors.deepPurple),
-                title: Text(cidade),
-                subtitle: Text(
-                  'Buscado em ${data.day}/${data.month}/${data.year} às ${data.hour.toString().padLeft(2, '0')}:${data.minute.toString().padLeft(2, '0')}',
-                ),
-                onTap: () => _abrirClima(cidade), // 👈 Ação ao tocar na cidade
+                title: Text('$cidade - $estado'),
+                leading: const Icon(Icons.location_city),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () => _abrirClima(cidade, estado),
               );
             },
           );
